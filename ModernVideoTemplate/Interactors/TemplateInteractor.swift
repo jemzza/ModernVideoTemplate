@@ -13,6 +13,8 @@ typealias MatrixPosition = SafeDictionary<Int, UIImage>
 
 final class TemplateInteractor: TemplateMakable  {
     
+    var presenter: TemplatePresentable?
+    
     var selectedImages: [UIImage] = [
         UIImage(imageLiteralResourceName: "1"),
         UIImage(imageLiteralResourceName: "2"),
@@ -27,7 +29,6 @@ final class TemplateInteractor: TemplateMakable  {
     
     var requests: [VNCoreMLRequest] = []
     
-    private let templatePresenter: TemplatePresenter
     private var pictureFilter: PictureFilterable
     private let videoService: VideoMakable
     
@@ -38,8 +39,7 @@ final class TemplateInteractor: TemplateMakable  {
     
     private let safeDictionary = SafeDictionary<Int, MatrixPosition>()
     
-    init(templatePresenter: TemplatePresenter, pictureFilter: PictureFilterable, videoService: VideoMakable) {
-        self.templatePresenter = templatePresenter
+    init(pictureFilter: PictureFilterable, videoService: VideoMakable) {
         self.pictureFilter = pictureFilter
         self.videoService = videoService
         
@@ -131,7 +131,7 @@ private extension TemplateInteractor {
     
     func sendImageToPresenter(image: UIImage, afterSeconds seconds: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(seconds)) { [weak self] in
-            self?.templatePresenter.processedImage = image
+            self?.presenter?.processedImage = image
         }
     }
     
@@ -186,9 +186,9 @@ private extension TemplateInteractor {
     func handleMakeVideoResult(_ result: Result<Bool, MediaError>) {
         switch result {
             case .success(let isSuccess):
-                templatePresenter.resultSubject.send(isSuccess)
+                presenter?.convertVideoResultSubject.send(isSuccess)
             case .failure(let error):
-                templatePresenter.resultSubject.send(completion: .failure(error))
+                presenter?.convertVideoResultSubject.send(completion: .failure(error))
         }
     }
     

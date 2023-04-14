@@ -8,8 +8,20 @@
 import Combine
 import UIKit
 
-final class TemplatePresenter: ObservableObject {
+protocol TemplatePresentable: AnyObject {
+    
+    var processedImage: UIImage? { get set }
+    var processedImagePublished: Published<UIImage?> { get }
+    var processedImagePublisher: Published<UIImage?>.Publisher { get }
+    
+    var convertVideoResultSubject: CurrentValueSubject<Bool, MediaError> { get }
+}
+
+final class TemplatePresenter: ObservableObject, TemplatePresentable {
     
     @Published var processedImage: UIImage? = nil
-    @Published var resultSubject = CurrentValueSubject<Bool, MediaError>(false)
+    var processedImagePublished: Published<UIImage?> { _processedImage }
+    var processedImagePublisher: Published<UIImage?>.Publisher { $processedImage }
+    
+    var convertVideoResultSubject: CurrentValueSubject<Bool, MediaError> = .init(true)
 }

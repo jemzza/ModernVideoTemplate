@@ -14,8 +14,8 @@ final class TemplateViewController: UIViewController {
     private var player: AVPlayer?
     private var videoProgressObserver: Any?
     
-    private let interactor: TemplateMakable?
-    private let presenter: TemplatePresenter?
+    private var interactor: TemplateMakable?
+    private weak var presenter: TemplatePresentable?
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -30,16 +30,12 @@ final class TemplateViewController: UIViewController {
         return .lightContent
     }
     
-    init(interactor: TemplateMakable, presenter: TemplatePresenter) {
-        self.interactor = interactor
-        self.presenter = presenter
-        
+    init(interactor: inout TemplateMakable, presenter: TemplatePresenter) {
         super.init(nibName: String(describing: Self.self), bundle: nil)
+        setup(interactor: &interactor, presenter: presenter)
     }
     
     required init?(coder: NSCoder) {
-        interactor = nil
-        presenter = nil
         super.init(coder: coder)
     }
     
@@ -59,14 +55,14 @@ final class TemplateViewController: UIViewController {
         videoProgressView.progress = 0.0
         videoProgressView.observedProgress?.totalUnitCount = 1
         
-        presenter?.$processedImage
+        presenter?.processedImagePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.imageView.image = $0
             })
             .store(in: &subscriptions)
         
-        presenter?.resultSubject
+        presenter?.convertVideoResultSubject
             .sink(receiveCompletion: { completion in
                 if case let .failure(error) = completion  {
                     print(error.localizedDescription)
@@ -161,5 +157,15 @@ final class TemplateViewController: UIViewController {
         
         videoProgressView.progress = Float(result)
         videoProgressView.setProgress(videoProgressView.progress, animated: true)
+    }
+}
+
+private extension TemplateViewController {
+    
+    func setup(interactor: inout TemplateMakable, presenter: TemplatePresentable) {
+        let viewController = self
+        viewController.presenter = presenter
+        viewController.interactor = interactor
+        interactor.presenter = presenter
     }
 }

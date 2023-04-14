@@ -18,22 +18,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         let window = UIWindow(windowScene: windowScene)
-        
-        let templatePresenter = TemplatePresenter()
-        
-        let templateInteractor = TemplateInteractor(
-            templatePresenter: templatePresenter,
+
+        var templateInteractor: TemplateMakable = TemplateInteractor(
             pictureFilter: CutCutFilter(strategy: DefaultFilterStrategy()),
             videoService: MediaService()
-            
+        )
+        let templatePresenter = TemplatePresenter()
+        let templateViewController = TemplateViewController(
+            interactor: &templateInteractor,
+            presenter: templatePresenter
         )
         
-        let templateViewController = TemplateViewController(interactor: templateInteractor, presenter: templatePresenter)
-        
         window.rootViewController = templateViewController
-        
         self.window = window
         window.makeKeyAndVisible()
     }
 }
-

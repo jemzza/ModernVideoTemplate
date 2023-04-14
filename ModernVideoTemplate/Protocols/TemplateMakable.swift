@@ -10,6 +10,7 @@ import Vision
 
 protocol TemplateMakable {
     
+    var presenter: TemplatePresentable? { get set }
     var selectedImages: [UIImage] { get set }
     var requests: [VNCoreMLRequest] { get set }
     
