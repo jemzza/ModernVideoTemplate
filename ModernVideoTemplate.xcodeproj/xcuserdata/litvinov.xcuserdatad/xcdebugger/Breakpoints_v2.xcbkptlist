@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "ED30B140-63A6-414A-ACBB-186D59BCC8B5"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "498C3442-B16D-4020-809A-18CE6B7A8C60"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ModernVideoTemplate/Services/VideoService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "writeImagesToVideo(ciImages:fps:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "498C3442-B16D-4020-809A-18CE6B7A8C60 - de18426ee9fecd0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ModernVideoTemplate.VideoService.writeImagesToVideo(ciImages: Swift.Array&lt;__C.CIImage&gt;, fps: Swift.Int32, completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "ModernVideoTemplate"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/litvinov/Documents/Core%20ML/ModernVideoTemplate/ModernVideoTemplate/Services/VideoService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35"
+                  offsetFromSymbolStart = "652">
+               </Location>
+               <Location
+                  uuid = "498C3442-B16D-4020-809A-18CE6B7A8C60 - de18426ee9fecd0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ModernVideoTemplate.VideoService.writeImagesToVideo(ciImages: Swift.Array&lt;__C.CIImage&gt;, fps: Swift.Int32, completion: () -&gt; ()) -&gt; ()"
+                  moduleName = "ModernVideoTemplate"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/litvinov/Documents/Core%20ML/ModernVideoTemplate/ModernVideoTemplate/Services/VideoService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35"
+                  offsetFromSymbolStart = "1008">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8AC0FA78-00F1-4534-88D6-B289042C2EFC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ModernVideoTemplate/Services/VideoService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
+            landmarkName = "addAudioToVideo(avUrlAudioAsset:avUrlVideoAsset:quality:outputUrl:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
