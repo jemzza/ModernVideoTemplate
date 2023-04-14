@@ -1,6 +1,7 @@
 #  Video Template App
 
-<video src="/IMG_0007.MOV" width="25%>
+https://user-images.githubusercontent.com/42701230/232134771-ea0bfa37-0369-4156-9e96-283174fde870.MOV
+
 
 ## About
 iOS app for creating video templates from images. Right now it contains only one screen,

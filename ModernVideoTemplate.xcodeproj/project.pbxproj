@@ -60,7 +60,6 @@
 		7D881F8D29E9B1CD001DF8BA /* TemplateMakable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D881F8C29E9B1CD001DF8BA /* TemplateMakable.swift */; };
 		7D881F9029E9B43F001DF8BA /* Resoures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D881F8F29E9B43F001DF8BA /* Resoures.swift */; };
 		7D881F9229E9B5C9001DF8BA /* VideoMakable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D881F9129E9B5C9001DF8BA /* VideoMakable.swift */; };
-		7D881F9529E9C7CD001DF8BA /* IMG_0007.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 7D881F9429E9C7CD001DF8BA /* IMG_0007.MOV */; };
 		7DB5676629DB45AD007E4095 /* MediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB5676529DB45AD007E4095 /* MediaService.swift */; };
 		7DF57E7229DF50D200A05AAE /* music.aac in Resources */ = {isa = PBXBuildFile; fileRef = 7DF57E7129DF50D200A05AAE /* music.aac */; };
 		7DF57E7629E1CDF000A05AAE /* CutStrategyInvertedBackgroundAndRotatedForeground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DF57E7529E1CDF000A05AAE /* CutStrategyInvertedBackgroundAndRotatedForeground.swift */; };
@@ -126,7 +125,6 @@
 		7D881F8F29E9B43F001DF8BA /* Resoures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resoures.swift; sourceTree = "<group>"; };
 		7D881F9129E9B5C9001DF8BA /* VideoMakable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoMakable.swift; sourceTree = "<group>"; };
 		7D881F9329E9B914001DF8BA /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
-		7D881F9429E9C7CD001DF8BA /* IMG_0007.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = IMG_0007.MOV; sourceTree = "<group>"; };
 		7DB5676529DB45AD007E4095 /* MediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaService.swift; sourceTree = "<group>"; };
 		7DF57E7129DF50D200A05AAE /* music.aac */ = {isa = PBXFileReference; lastKnownFileType = file; path = music.aac; sourceTree = "<group>"; };
 		7DF57E7529E1CDF000A05AAE /* CutStrategyInvertedBackgroundAndRotatedForeground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategyInvertedBackgroundAndRotatedForeground.swift; sourceTree = "<group>"; };
@@ -196,7 +194,6 @@
 			isa = PBXGroup;
 			children = (
 				7D881F9329E9B914001DF8BA /* Readme.md */,
-				7D881F9429E9C7CD001DF8BA /* IMG_0007.MOV */,
 				7D1736E229D87DFC006E7E6A /* ModernVideoTemplate */,
 				7D1736F929D87DFD006E7E6A /* ModernVideoTemplateTests */,
 				7D17370329D87DFD006E7E6A /* ModernVideoTemplateUITests */,
@@ -454,7 +451,6 @@
 				7D1736F029D87DFD006E7E6A /* LaunchScreen.storyboard in Resources */,
 				7DF57E7229DF50D200A05AAE /* music.aac in Resources */,
 				7D1736ED29D87DFD006E7E6A /* Assets.xcassets in Resources */,
-				7D881F9529E9C7CD001DF8BA /* IMG_0007.MOV in Resources */,
 				7D4D02D429DB3F9E000590A6 /* TemplateViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
