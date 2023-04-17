@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CutStrategySlowAppearing: PictureStrategable {
+final class CutStrategyArtAppearing: PictureStrategable {
     
     func processImages(current firstImage: UIImage, next secondImage: UIImage, mask: CIImage) -> [UIImage] {
         guard let secondCGImage = secondImage.cgImage else {

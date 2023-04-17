@@ -52,13 +52,15 @@ final class TemplateInteractor: TemplateMakable  {
     }
     
     func makeTemplate() {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let images = self?.getProcessedImages() else {
-                return
-            }
-            
-            self?.videoService.makeVideo(ciImages: images) { [weak self] result in
-                self?.handleMakeVideoResult(result)
+        processedImages { [weak self] ciImages in
+            DispatchQueue.global(qos: .userInitiated).sync {
+                guard let ciImages = ciImages else {
+                    return
+                }
+                                                
+                self?.videoService.makeVideo(ciImages: ciImages) { [weak self] result in
+                    self?.handleMakeVideoResult(result)
+                }
             }
         }
     }
@@ -66,7 +68,7 @@ final class TemplateInteractor: TemplateMakable  {
 
 private extension TemplateInteractor {
     
-    func getProcessedImages() -> [CIImage]? {
+    func processedImages(completion: (_ ciImages: [CIImage]?) -> Void) {
         requests = createCoreMLRequests()
         
         for index in 1..<selectedImages.count {
@@ -84,6 +86,7 @@ private extension TemplateInteractor {
         }
         
         dispatchGroup.wait()
+        requests.removeAll()
         
         var array = [CIImage]()
         
@@ -103,8 +106,9 @@ private extension TemplateInteractor {
         }
         
         safeDictionary.removeAll()
+        selectedImages.removeAll()
         
-        return array
+        completion(array)
     }
     
     func createCoreMLRequests() -> [VNCoreMLRequest] {
@@ -154,13 +158,14 @@ private extension TemplateInteractor {
             case 0:
                 pictureFilter.strategy = CutStrategyInvertedBackgroundAndRotatedForeground()
             case 1:
-                pictureFilter.strategy = CutStrategySlowAppearing()
+                pictureFilter.strategy = CutStrategyArtAppearing()
             case 2:
                 pictureFilter.strategy = CutStrategyStrokeAppearing()
+//                pictureFilter.strategy = DefaultFilterStrategy()
             case 3:
                 pictureFilter.strategy = CutStrategyInvertRotateScale()
             case 4:
-                pictureFilter.strategy = CutStrategySlowAppearing()
+                pictureFilter.strategy = CutStrategyArtAppearing()
             case 5:
                 pictureFilter.strategy = CutStrategyForegroundScaling()
             case 6:
@@ -178,7 +183,6 @@ private extension TemplateInteractor {
         )
         
         setProcessedIImagesToDictionary(index: index, images: processedImages)
-        pictureFilter.strategy = DefaultFilterStrategy()
         
         dispatchGroup.leave()
     }
@@ -198,17 +202,17 @@ private extension TemplateInteractor {
             return
         }
         
+        row[0] = selectedImages[index]
+        
         for processedIndex in 1...images.count {
             row[processedIndex] = images[processedIndex - 1]
         }
-        
-        row[0] = selectedImages[index]
         
         // Set last image to Dictionary
         if index == selectedImages.count - 2 {
             var count = 0
             var isImageExist = true
-            
+
             while isImageExist {
                 if let _ = row[count] {
                     count += 1

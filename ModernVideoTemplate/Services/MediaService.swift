@@ -74,7 +74,7 @@ final class MediaService: VideoMakable {
         assetWriterInput.requestMediaDataWhenReady(on: videoQueue) { [weak self] in
             while assetWriterInput.isReadyForMoreMediaData == true, frameCount < ciImages.count {
                 let lastFrameTime = CMTimeMake(
-                    value: Int64(frameCount) * (self?.timeValue ?? 0), timescale: self?.timeScale ?? 0
+                    value: Int64(frameCount) * (self?.timeValue ?? 3), timescale: self?.timeScale ?? 10
                 )
                 let presentationTime = frameCount == 0 ? lastFrameTime : CMTimeAdd(lastFrameTime, frameDuration)
 

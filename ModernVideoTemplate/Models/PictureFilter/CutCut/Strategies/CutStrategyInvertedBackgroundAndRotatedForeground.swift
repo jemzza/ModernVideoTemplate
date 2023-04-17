@@ -12,7 +12,7 @@ final class CutStrategyInvertedBackgroundAndRotatedForeground: PictureStrategabl
     private enum Constants {
         
         static let angle: CGFloat = -5
-        static let humanPostition = CGPoint(x: 120, y: -100)
+        static let humanPostition = CGPoint(x: 80, y: -220)
     }
     
     func processImages(current firstImage: UIImage, next secondImage: UIImage, mask: CIImage) -> [UIImage] {

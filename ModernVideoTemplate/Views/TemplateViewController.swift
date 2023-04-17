@@ -11,6 +11,8 @@ import AVKit
 
 final class TemplateViewController: UIViewController {
     
+    private var playerLayer: AVPlayerLayer?
+    private var playerItem: AVPlayerItem?
     private var player: AVPlayer?
     private var videoProgressObserver: Any?
     
@@ -43,6 +45,8 @@ final class TemplateViewController: UIViewController {
         if let videoProgressObserver = videoProgressObserver {
             player?.removeTimeObserver(videoProgressObserver)
         }
+        
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLoad() {
@@ -63,6 +67,7 @@ final class TemplateViewController: UIViewController {
             .store(in: &subscriptions)
         
         presenter?.convertVideoResultSubject
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case let .failure(error) = completion  {
                     print(error.localizedDescription)
@@ -81,7 +86,6 @@ final class TemplateViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        activityIndicator.startAnimating()
         
         let outputMovieURL = Resources.outputMovieUrl
         
@@ -90,6 +94,12 @@ final class TemplateViewController: UIViewController {
         } else {
             createVideoTemplate()
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        playerLayer?.frame = videoContainerView.bounds
     }
     
     private func createVideoTemplate() {
@@ -101,11 +111,6 @@ final class TemplateViewController: UIViewController {
     
     private func setupPlayer() {
         player = AVPlayer()
-        let playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = videoContainerView.bounds
-        playerLayer.videoGravity = .resizeAspectFill
-        
-        videoContainerView.layer.addSublayer(playerLayer)
         
         videoProgressObserver = player?.addPeriodicTimeObserver(
             forInterval: CMTime(value: 1, timescale: 10),
@@ -113,16 +118,26 @@ final class TemplateViewController: UIViewController {
             using: { [weak self] progressTime in
                 self?.updateProgressView(progressTime: progressTime)
             })
-    }
-    
-    private func playVideoWithFileName(_ fileName: URL) {
-        let playerItem = AVPlayerItem(url: fileName)
+        
         
         NotificationCenter.default.addObserver(
             self, selector: #selector(playerDidFinishPlaying),
             name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-            object: player?.currentItem
+            object: playerItem
         )
+        
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer?.videoGravity = .resizeAspectFill
+        
+        guard let playerLayer = playerLayer else {
+            return
+        }
+        
+        videoContainerView.layer.addSublayer(playerLayer)
+    }
+    
+    private func playVideoWithFileName(_ fileName: URL) {
+        playerItem = AVPlayerItem(url: fileName)
         
         player?.replaceCurrentItem(with: playerItem)
         player?.play()
@@ -146,17 +161,15 @@ final class TemplateViewController: UIViewController {
     
     private func updateProgressView(progressTime: CMTime) {
         guard
-            let duration = player?.currentItem?.duration
+            let duration = playerItem?.duration
         else {
             videoProgressView.progress = .zero
             
             return
         }
         
-        let result = duration.seconds / 100.0 * Double(progressTime.seconds)
-        
+        let result = 1 / duration.seconds * Double(progressTime.seconds)
         videoProgressView.progress = Float(result)
-        videoProgressView.setProgress(videoProgressView.progress, animated: true)
     }
 }
 
