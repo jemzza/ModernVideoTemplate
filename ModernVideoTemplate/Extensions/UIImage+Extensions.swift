@@ -266,8 +266,7 @@ extension UIImage {
             return
         }
         
-        // Move to a background thread for the heavy lifting
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .userInitiated).async {
             
             // Ensure we have the correct colorspace so we can safely iterate over the pixel data
             let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -351,11 +350,36 @@ extension UIImage {
     /// - Parameter color: The color to fill
     /// - Returns: A re-colored version of this image with the specified color
     func imageByFillingWithColor(_ color: UIColor) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { context in
-            color.setFill()
-            context.fill(context.format.bounds)
-            draw(in: context.format.bounds, blendMode: .destinationIn, alpha: 1.0)
+        guard let cgImage = cgImage else {
+            return self
         }
+        
+        let imageRect = CGRect(origin: .zero, size: size)
+        
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()
+
+        let flip = CGAffineTransformMakeScale(1.0, -1.0)
+        let flipThenShift = CGAffineTransformTranslate(flip, 0, imageRect.height)
+        
+        context?.setFillColor(color.cgColor)
+        context?.fill(imageRect)
+        context?.setBlendMode(CGBlendMode.destinationIn)
+        context?.setAlpha(1.0)
+        
+        let transformedRect = CGRectApplyAffineTransform(imageRect, flipThenShift)
+        context?.concatenate(flipThenShift)
+        context?.draw(cgImage, in: transformedRect)
+        
+        let ouputImage = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+        
+        guard let ouputImage = ouputImage else {
+            return self
+        }
+
+        return ouputImage
     }
     
 }
@@ -385,53 +409,75 @@ extension UIImage {
             width: size.width + (thickness * 2) * koef,
             height: size.height + (thickness * 2)
         )
-        let renderer = UIGraphicsImageRenderer(size: outputSize)
-        let stroked = renderer.image { ctx in
-            
-            // Compute the center of our image
-            let center = CGPoint(x: outputSize.width / 2, y: outputSize.height / 2)
-            
-            let centerRect = CGRect(
-                x: center.x - (outputSize.width / 2),
-                y: center.y - (outputSize.height / 2),
-                width: outputSize.width,
-                height: outputSize.height
-            )
-            
-            // Compute the increments for rotations / extrusions
-            let rotationIncrement: CGFloat = rotationSteps > 0 ? 360 / CGFloat(rotationSteps) : 360
-            let extrusionIncrement: CGFloat = extrusionSteps > 0 ? thickness / CGFloat(extrusionSteps) : thickness
-            
-            for rotation in 0..<rotationSteps {
-                for extrusion in 1...extrusionSteps {
-                    
-                    // Compute the angle and distance for this stamp
-                    let angleInDegrees: CGFloat = CGFloat(rotation) * rotationIncrement
-                    let angleInRadians: CGFloat = angleInDegrees * .pi / 180.0
-                    let extrusionDistance: CGFloat = CGFloat(extrusion) * extrusionIncrement
-                    
-                    // Compute the position for this stamp
-                    let x = center.x + extrusionDistance * cos(angleInRadians)
-                    let y = center.y + extrusionDistance * sin(angleInRadians)
-                    let vector = CGPoint(x: x, y: y)
-                    
-                    // Draw our stamp at this position
-                    let drawRect = CGRect(
-                        x: vector.x - (outputSize.width / 2),
-                        y: vector.y - (outputSize.height / 2),
-                        width: outputSize.width,
-                        height: outputSize.height
-                    )
-                    
-                    strokeImage.draw(in: drawRect, blendMode: .destinationOver, alpha: 1.0)
+        
+        UIGraphicsBeginImageContext(outputSize)
+        let context = UIGraphicsGetCurrentContext()
+        
+        let flip = CGAffineTransformMakeScale(1.0, -1.0)
+        let flipThenShift = CGAffineTransformTranslate(flip, 0, outputSize.height)
+        
+        // Compute the center of our image
+        let center = CGPoint(x: outputSize.width / 2, y: outputSize.height / 2)
+        let centerRect = CGRect(
+            x: center.x - (outputSize.width / 2),
+            y: center.y - (outputSize.height / 2),
+            width: outputSize.width,
+            height: outputSize.height
+        )
+        
+        // Compute the increments for rotations / extrusions
+        let rotationIncrement: CGFloat = rotationSteps > 0 ? 360 / CGFloat(rotationSteps) : 360
+        let extrusionIncrement: CGFloat = extrusionSteps > 0 ? thickness / CGFloat(extrusionSteps) : thickness
+        
+        for rotation in 0..<rotationSteps {
+            for extrusion in 1...extrusionSteps {
+                
+                // Compute the angle and distance for this stamp
+                let angleInDegrees: CGFloat = CGFloat(rotation) * rotationIncrement
+                let angleInRadians: CGFloat = angleInDegrees * .pi / 180.0
+                let extrusionDistance: CGFloat = CGFloat(extrusion) * extrusionIncrement
+                
+                // Compute the position for this stamp
+                let x = center.x + extrusionDistance * cos(angleInRadians)
+                let y = center.y + extrusionDistance * sin(angleInRadians)
+                let vector = CGPoint(x: x, y: y)
+                
+                // Draw our stamp at this position
+                let drawRect = CGRect(
+                    x: vector.x - (outputSize.width / 2),
+                    y: vector.y - (outputSize.height / 2),
+                    width: outputSize.width,
+                    height: outputSize.height
+                )
+                
+                guard let strokeCGImage = strokeImage.cgImage else {
+                    continue
                 }
+                
+                let transformedRect = CGRectApplyAffineTransform(drawRect, flipThenShift)
+                let innerflipThenShift = CGAffineTransformTranslate(flip, 0, drawRect.height)
+                context?.concatenate(innerflipThenShift)
+                context?.draw(strokeCGImage, in: transformedRect)
             }
-            
-            // Finally, re-draw ourselves centered within the context, so we appear in-front of all of the stamps we've drawn
-            self.draw(in: centerRect, blendMode: .normal, alpha: 1.0)
         }
         
-        return stroked
+        // Finally, re-draw ourselves centered within the context, so we appear in-front of all of the stamps we've drawn
+        let transformedRect = CGRectApplyAffineTransform(centerRect, flipThenShift)
+        
+        context?.setBlendMode(CGBlendMode.normal)
+        context?.setAlpha(1.0)
+        context?.concatenate(flipThenShift)
+        context?.draw(cgImage!, in: transformedRect)
+        
+        let ouputImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        guard let ouputImage = ouputImage else {
+            return self
+        }
+        
+        return ouputImage
     }
 }
 

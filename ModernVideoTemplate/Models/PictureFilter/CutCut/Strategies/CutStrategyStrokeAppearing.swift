@@ -11,7 +11,6 @@ final class CutStrategyStrokeAppearing: PictureStrategable {
     
     private enum Constants {
         
-        static let strokesCount = 2
         static let strokesThickness: [CGFloat] = [60, 80, 120]
     }
         
@@ -36,7 +35,7 @@ final class CutStrategyStrokeAppearing: PictureStrategable {
         var images: [UIImage] = []
         let imageWithoutBackground = nextImage.removeBackground(mask: mask)
         
-        for index in 0..<Constants.strokesCount {
+        for index in 0..<Constants.strokesThickness.count {
             let image = index == 0 ? imageWithoutBackground : images[index - 1]
             
             images.append(

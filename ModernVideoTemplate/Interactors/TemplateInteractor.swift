@@ -161,7 +161,6 @@ private extension TemplateInteractor {
                 pictureFilter.strategy = CutStrategyArtAppearing()
             case 2:
                 pictureFilter.strategy = CutStrategyStrokeAppearing()
-//                pictureFilter.strategy = DefaultFilterStrategy()
             case 3:
                 pictureFilter.strategy = CutStrategyInvertRotateScale()
             case 4:
@@ -175,7 +174,7 @@ private extension TemplateInteractor {
             default:
                 pictureFilter.strategy = DefaultFilterStrategy()
         }
-        
+                
         let processedImages =  pictureFilter.getProcessedImages(
             current: selectedImages[index],
             next: selectedImages[index + 1],
