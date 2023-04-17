@@ -9,64 +9,46 @@ import UIKit
 
 final class CutStrategyStrokeAppearing: PictureStrategable {
     
-    private let dispatchGroup = DispatchGroup()
-    private let cIImagesafeDictionary = SafeDictionary<Int, CIImage>()
-    
+    private enum Constants {
+        
+        static let strokesCount = 2
+        static let strokesThickness: [CGFloat] = [60, 80, 120]
+    }
+        
     func processImages(current firstImage: UIImage, next secondImage: UIImage, mask: CIImage) -> [UIImage] {
+        let ciImagesWithStroke = getCIImagesWithStrokes(nextImage: secondImage, mask: mask)
         
-        var imagesWithStroke = getImagesWithStrokes(nextImage: secondImage, mask: mask)
-                
-        for index in 0..<imagesWithStroke.count {
-            dispatchGroup.enter()
-            
-            DispatchQueue.global().async { [weak self] in
-                let outputImageFirstWithoutHuman = imagesWithStroke[index].cgImage?.ciImage
-                    .removeForeground(mask: mask)
-                    .addToMask(mask)
-                self?.cIImagesafeDictionary[index] = outputImageFirstWithoutHuman
-                self?.dispatchGroup.leave()
-            }
-        }
+        var resultImages: [UIImage] = []
         
-        dispatchGroup.wait()
-        imagesWithStroke = []
-        
-        imagesWithStroke.append(secondImage.changeBackground(for: firstImage, mask: mask))
-        
-        for index in 0..<cIImagesafeDictionary.count {
-            guard let cIImage = cIImagesafeDictionary[index] else {
+        for index in 0...ciImagesWithStroke.count {
+            if index == 0 {
+                resultImages.append(secondImage.changeBackground(for: firstImage, mask: mask))
                 continue
             }
             
-            imagesWithStroke.append(secondImage.changeBackground(for: firstImage, mask: cIImage))
+            resultImages.append(secondImage.changeBackground(for: firstImage, mask: ciImagesWithStroke[index - 1]))
         }
-        
-        return imagesWithStroke
+                
+        return resultImages
     }
     
-    private func getImagesWithStrokes(nextImage: UIImage, mask: CIImage) -> [UIImage] {
-        var array: [UIImage] = []
-        
+    private func getCIImagesWithStrokes(nextImage: UIImage, mask: CIImage) -> [CIImage] {
+        var images: [UIImage] = []
         let imageWithoutBackground = nextImage.removeBackground(mask: mask)
         
-        array.append(
-            imageWithoutBackground
-                .imageByApplyingStroke(strokeColor: .black, strokeThickness: 60.0)
-                .imageByApplyingStroke(strokeColor: .white, strokeThickness: 60.0)
-        )
+        for index in 0..<Constants.strokesCount {
+            let image = index == 0 ? imageWithoutBackground : images[index - 1]
+            
+            images.append(
+                image
+                    .imageByApplyingStroke(strokeColor: .black, strokeThickness: Constants.strokesThickness[index])
+                    .imageByApplyingStroke(strokeColor: .white, strokeThickness: Constants.strokesThickness[index])
+            )
+        }
         
-        array.append(
-            array[0]
-                .imageByApplyingStroke(strokeColor: .black, strokeThickness: 80.0)
-                .imageByApplyingStroke(strokeColor: .white, strokeThickness: 80.0)
-        )
-        
-        array.append(
-            array[1]
-                .imageByApplyingStroke(strokeColor: .black, strokeThickness: 120.0)
-                .imageByApplyingStroke(strokeColor: .white, strokeThickness: 120.0)
-        )
-        
-        return array
+        return images
+            .map { $0.cgImage?.ciImage }
+            .compactMap { $0 }
+            .map { $0.removeForeground(mask: mask).addToMask(mask) ?? CIImage() }
     }
 }

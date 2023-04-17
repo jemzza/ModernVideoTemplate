@@ -177,20 +177,19 @@ extension UIImage {
     }
     
     func resizedImage(scale: CGFloat, aspectRatio: CGFloat = 1) -> UIImage {
-        guard let image = CIImage(image: self) else {
+        guard let inputCIImage = CIImage(image: self) else {
             return self
         }
         
-        let filter = CIFilter(name: "CILanczosScaleTransform")
-        filter?.setValue(image, forKey: kCIInputImageKey)
-        filter?.setValue(scale, forKey: kCIInputScaleKey)
-        filter?.setValue(aspectRatio, forKey: kCIInputAspectRatioKey)
+        let filter = CIFilter.lanczosScaleTransform()
+        filter.inputImage = inputCIImage
+        filter.scale = Float(scale)
+        filter.aspectRatio = Float(aspectRatio)
         
-        let sharedContext = CIContext(options: [.useSoftwareRenderer : false])
+        let context = CIContext()
         
-        guard let outputCIImage = filter?.outputImage,
-              let outputCGImage = sharedContext.createCGImage(outputCIImage,
-                                                              from: outputCIImage.extent)
+        guard let outputCIImage = filter.outputImage,
+              let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent)
         else {
             return self
         }
@@ -438,64 +437,17 @@ extension UIImage {
 
 extension UIImage {
     
-    func drawIn(
-        _ backgpund: UIImage?,
-        position: CGPoint = .zero,
-        angle: CGFloat = 0,
-        alpha: CGFloat = 1.0,
-        backgroundAlpha: CGFloat = 1.0,
-        blendMode: CGBlendMode = .normal
-    ) -> UIImage {
-        guard let backgpund = backgpund else {
-            return self
-        }
-        
-        var ciForegroundImage = CIImage(image: self)
-        ciForegroundImage = ciForegroundImage?
-            .transformed(by: CGAffineTransform(rotationAngle: angle.radians()))
-        
-        
-        let leftPoint = ((ciForegroundImage?.extent.size.width)! - backgpund.size.width) / 2
-        let rightPoint = ((ciForegroundImage?.extent.size.width)! - backgpund.size.width) / 2
-        let newPosition = CGPoint(x: -leftPoint, y: -rightPoint) + position
-        
-        guard let ciForegroundImage = ciForegroundImage else {
-            return self
-        }
-        
-        let foregroundImage = UIImage(ciImage: ciForegroundImage)
-        
-        let renderer = UIGraphicsImageRenderer(size: backgpund.size)
-        
-        return renderer.image { context in
-            backgpund.draw(
-                in: CGRect(origin: CGPoint.zero, size: backgpund.size),
-                blendMode: blendMode,
-                alpha: backgroundAlpha
-            )
-            
-            foregroundImage.draw(
-                in: CGRect(origin: newPosition, size: foregroundImage.size), blendMode: .normal, alpha: alpha
-            )
-        }
-    }
-}
-
-extension UIImage {
-    
     func changeBackground(for background: UIImage, mask: CIImage) -> UIImage {
         guard let cgImage = cgImage, let cgBackground = background.cgImage else {
             return self
         }
-        
-        var maskImage = mask
-        
+                
         var background = CIImage(cgImage: cgBackground)
         let originalImage = CIImage(cgImage: cgImage)
         
-        let scaleX = originalImage.extent.width / maskImage.extent.width
-        let scaleY = originalImage.extent.height / maskImage.extent.height
-        maskImage = maskImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY), highQualityDownsample: true)
+        let scaleX = originalImage.extent.width / mask.extent.width
+        let scaleY = originalImage.extent.height / mask.extent.height
+        let maskImage = mask.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY), highQualityDownsample: true)
         
         let backgroundScaleX = originalImage.extent.width / background.extent.width
         let backgroundScaleY = originalImage.extent.height / background.extent.height
@@ -509,19 +461,16 @@ extension UIImage {
         if isDifferenceXCritical == true || isDifferenceYCritical == true {
             background = background.transformed(
                 by: CGAffineTransform(scaleX: backgroundScaleX, y: backgroundScaleY),
-                highQualityDownsample: true
+                highQualityDownsample: false
             )
         }
-        
-        let context = CIContext()
-        guard let inputCGImage = context.createCGImage(originalImage, from: originalImage.extent) else {
-            return self
-        }
-        
+
         let blendFilter = CIFilter.blendWithRedMask()
-        blendFilter.inputImage = CIImage(cgImage: inputCGImage)
+        blendFilter.inputImage = originalImage
         blendFilter.maskImage = maskImage
         blendFilter.backgroundImage = background
+        
+        let context = CIContext()
         
         guard
             let outputCIImage = blendFilter.outputImage,
@@ -529,7 +478,7 @@ extension UIImage {
         else {
             return self
         }
-        
+                
         return UIImage(cgImage: outputCGImage)
     }
 }
@@ -548,14 +497,11 @@ extension UIImage {
         let scaleY = originalImage.extent.height / maskImage.extent.height
         maskImage = maskImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY), highQualityDownsample: true)
         
-        let context = CIContext()
-        guard let inputCGImage = context.createCGImage(originalImage, from: originalImage.extent) else {
-            return self
-        }
-        
         let blendFilter = CIFilter.blendWithRedMask()
-        blendFilter.inputImage = CIImage(cgImage: inputCGImage)
+        blendFilter.inputImage = originalImage
         blendFilter.maskImage = maskImage
+        
+        let context = CIContext()
         
         guard
             let outputCIImage = blendFilter.outputImage,
@@ -672,5 +618,39 @@ extension UIImage {
         let imageRef = self.cgImage!.cropping(to: rect.applying(rectTransform))
         let result = UIImage(cgImage: imageRef!, scale: self.scale, orientation: self.imageOrientation)
         return result
+    }
+    
+    func drawIn(
+        _ backgpund: UIImage?,
+        position: CGPoint = .zero,
+        angle: CGFloat = 0
+    ) -> UIImage {
+        guard let backgpundCIImage = backgpund?.cgImage?.ciImage, var inputCIImage = CIImage(image: self) else {
+            return self
+        }
+        
+        let x = (inputCIImage.extent.size.width - backgpundCIImage.extent.size.width) / 2
+        let y = (inputCIImage.extent.size.height - backgpundCIImage.extent.size.height) / 2
+        let newPosition = CGPoint(x: -x, y: y) + position
+        
+        inputCIImage = inputCIImage
+            .transformed(by: CGAffineTransform(rotationAngle: angle.radians()))
+            .transformed(by: CGAffineTransform(translationX: newPosition.x, y: -newPosition.y))
+        
+        
+        let blendFilter = CIFilter.sourceAtopCompositing()
+        blendFilter.inputImage = inputCIImage
+        blendFilter.backgroundImage = backgpundCIImage
+        
+        let context = CIContext()
+        
+        guard
+            let outputCIImage = blendFilter.outputImage,
+            let outputCGImage = context.createCGImage(outputCIImage, from: CGRect(origin: .zero, size: backgpundCIImage.extent.size))
+        else {
+            return self
+        }
+        
+        return UIImage(cgImage: outputCGImage)
     }
 }

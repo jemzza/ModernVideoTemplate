@@ -11,7 +11,7 @@
 		7D104E1B29E730B600E16814 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E1A29E730B600E16814 /* CGFloat+Extensions.swift */; };
 		7D104E1D29E7344F00E16814 /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E1C29E7344F00E16814 /* CGPoint+Extensions.swift */; };
 		7D104E1F29E8511B00E16814 /* DefaultFilterStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E1E29E8511B00E16814 /* DefaultFilterStrategy.swift */; };
-		7D104E2129E8562900E16814 /* CutStrategySlowAppearing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E2029E8562900E16814 /* CutStrategySlowAppearing.swift */; };
+		7D104E2129E8562900E16814 /* CutStrategyArtAppearing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E2029E8562900E16814 /* CutStrategyArtAppearing.swift */; };
 		7D104E2329E857A500E16814 /* CutStrategyStrokeAppearing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E2229E857A500E16814 /* CutStrategyStrokeAppearing.swift */; };
 		7D104E2529E8584700E16814 /* CutStrategyInvertRotateScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E2429E8584700E16814 /* CutStrategyInvertRotateScale.swift */; };
 		7D104E2729E85B4100E16814 /* CutStrategyForegroundScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D104E2629E85B4100E16814 /* CutStrategyForegroundScaling.swift */; };
@@ -89,7 +89,7 @@
 		7D104E1A29E730B600E16814 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
 		7D104E1C29E7344F00E16814 /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
 		7D104E1E29E8511B00E16814 /* DefaultFilterStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFilterStrategy.swift; sourceTree = "<group>"; };
-		7D104E2029E8562900E16814 /* CutStrategySlowAppearing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategySlowAppearing.swift; sourceTree = "<group>"; };
+		7D104E2029E8562900E16814 /* CutStrategyArtAppearing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategyArtAppearing.swift; sourceTree = "<group>"; };
 		7D104E2229E857A500E16814 /* CutStrategyStrokeAppearing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategyStrokeAppearing.swift; sourceTree = "<group>"; };
 		7D104E2429E8584700E16814 /* CutStrategyInvertRotateScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategyInvertRotateScale.swift; sourceTree = "<group>"; };
 		7D104E2629E85B4100E16814 /* CutStrategyForegroundScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutStrategyForegroundScaling.swift; sourceTree = "<group>"; };
@@ -180,7 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				7DF57E7529E1CDF000A05AAE /* CutStrategyInvertedBackgroundAndRotatedForeground.swift */,
-				7D104E2029E8562900E16814 /* CutStrategySlowAppearing.swift */,
+				7D104E2029E8562900E16814 /* CutStrategyArtAppearing.swift */,
 				7D104E2229E857A500E16814 /* CutStrategyStrokeAppearing.swift */,
 				7D104E2429E8584700E16814 /* CutStrategyInvertRotateScale.swift */,
 				7D104E2629E85B4100E16814 /* CutStrategyForegroundScaling.swift */,
@@ -484,7 +484,7 @@
 				7DB5676629DB45AD007E4095 /* MediaService.swift in Sources */,
 				7D17373029D9C709006E7E6A /* CoreML+Helpers.swift in Sources */,
 				7D104E3129E8B72500E16814 /* CutCutFilter.swift in Sources */,
-				7D104E2129E8562900E16814 /* CutStrategySlowAppearing.swift in Sources */,
+				7D104E2129E8562900E16814 /* CutStrategyArtAppearing.swift in Sources */,
 				7DF57E7A29E1D53E00A05AAE /* PictureStrategable.swift in Sources */,
 				7D881F9229E9B5C9001DF8BA /* VideoMakable.swift in Sources */,
 				7D17374C29DB21E2006E7E6A /* SafeDictionary.swift in Sources */,

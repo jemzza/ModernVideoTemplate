@@ -33,17 +33,11 @@
                 </progressView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Pv-Ce-Bhw">
                     <rect key="frame" x="0.0" y="61" width="393" height="757"/>
-                    <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="lPU-Ym-oCv">
-                            <rect key="frame" x="186.66666666666666" y="368.66666666666669" width="20" height="20"/>
-                        </activityIndicatorView>
-                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="lPU-Ym-oCv" firstAttribute="centerY" secondItem="4Pv-Ce-Bhw" secondAttribute="centerY" id="6bI-tl-cTH"/>
-                        <constraint firstItem="lPU-Ym-oCv" firstAttribute="centerX" secondItem="4Pv-Ce-Bhw" secondAttribute="centerX" id="ZcI-Eo-p5o"/>
-                    </constraints>
                 </view>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="lPU-Ym-oCv">
+                    <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                </activityIndicatorView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iVi-DS-ivU">
                     <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20046047185430463" colorSpace="custom" customColorSpace="sRGB"/>
@@ -55,8 +49,8 @@
                         <action selector="replayButtonTapped:" destination="-1" eventType="touchUpInside" id="QvN-Gv-esV"/>
                     </connections>
                 </button>
-                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zT2-mY-xVM">
-                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zT2-mY-xVM">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                 </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="XmA-9b-umD"/>
@@ -64,18 +58,20 @@
             <constraints>
                 <constraint firstItem="XmA-9b-umD" firstAttribute="trailing" secondItem="cfP-wC-L4O" secondAttribute="trailing" id="370-36-nua"/>
                 <constraint firstItem="4Pv-Ce-Bhw" firstAttribute="top" secondItem="cfP-wC-L4O" secondAttribute="bottom" id="4Rp-y7-4A4"/>
-                <constraint firstItem="iVi-DS-ivU" firstAttribute="leading" secondItem="XmA-9b-umD" secondAttribute="leading" id="97t-4q-Q8e"/>
-                <constraint firstItem="zT2-mY-xVM" firstAttribute="top" secondItem="f3g-pY-W4f" secondAttribute="top" id="DO8-cC-Dnm"/>
-                <constraint firstItem="XmA-9b-umD" firstAttribute="bottom" secondItem="4Pv-Ce-Bhw" secondAttribute="bottom" id="DSI-mK-1SD"/>
-                <constraint firstItem="XmA-9b-umD" firstAttribute="bottom" secondItem="iVi-DS-ivU" secondAttribute="bottom" id="G5i-Kc-Hd1"/>
+                <constraint firstItem="zT2-mY-xVM" firstAttribute="top" secondItem="XmA-9b-umD" secondAttribute="top" id="DO8-cC-Dnm"/>
+                <constraint firstItem="lPU-Ym-oCv" firstAttribute="centerX" secondItem="f3g-pY-W4f" secondAttribute="centerX" id="EK4-0g-Zbb"/>
                 <constraint firstItem="zT2-mY-xVM" firstAttribute="trailing" secondItem="XmA-9b-umD" secondAttribute="trailing" id="GBV-HX-P9z"/>
                 <constraint firstItem="cfP-wC-L4O" firstAttribute="top" secondItem="XmA-9b-umD" secondAttribute="top" id="HAm-X8-fo3"/>
-                <constraint firstItem="iVi-DS-ivU" firstAttribute="top" secondItem="XmA-9b-umD" secondAttribute="top" id="Hdk-7M-k14"/>
-                <constraint firstItem="4Pv-Ce-Bhw" firstAttribute="leading" secondItem="XmA-9b-umD" secondAttribute="leading" id="Jbq-SU-c3P"/>
+                <constraint firstItem="iVi-DS-ivU" firstAttribute="leading" secondItem="XmA-9b-umD" secondAttribute="leading" id="IcX-c8-UaZ"/>
+                <constraint firstItem="XmA-9b-umD" firstAttribute="bottom" secondItem="4Pv-Ce-Bhw" secondAttribute="bottom" id="KIq-4P-qEf"/>
                 <constraint firstItem="cfP-wC-L4O" firstAttribute="leading" secondItem="XmA-9b-umD" secondAttribute="leading" id="ZE2-qM-Swa"/>
-                <constraint firstItem="XmA-9b-umD" firstAttribute="trailing" secondItem="4Pv-Ce-Bhw" secondAttribute="trailing" id="cVP-w3-4ms"/>
-                <constraint firstAttribute="bottom" secondItem="zT2-mY-xVM" secondAttribute="bottom" id="dz5-fD-TOC"/>
-                <constraint firstItem="XmA-9b-umD" firstAttribute="trailing" secondItem="iVi-DS-ivU" secondAttribute="trailing" id="rjK-rk-wGo"/>
+                <constraint firstAttribute="trailing" secondItem="4Pv-Ce-Bhw" secondAttribute="trailing" id="dUC-Ye-Sck"/>
+                <constraint firstItem="XmA-9b-umD" firstAttribute="bottom" secondItem="zT2-mY-xVM" secondAttribute="bottom" id="dz5-fD-TOC"/>
+                <constraint firstItem="4Pv-Ce-Bhw" firstAttribute="leading" secondItem="f3g-pY-W4f" secondAttribute="leading" id="gXy-S5-5qs"/>
+                <constraint firstItem="XmA-9b-umD" firstAttribute="top" secondItem="iVi-DS-ivU" secondAttribute="top" id="h9h-W1-R9n"/>
+                <constraint firstItem="XmA-9b-umD" firstAttribute="bottom" secondItem="iVi-DS-ivU" secondAttribute="bottom" id="sfZ-Jz-BCQ"/>
+                <constraint firstItem="XmA-9b-umD" firstAttribute="trailing" secondItem="iVi-DS-ivU" secondAttribute="trailing" id="w2F-lM-p41"/>
+                <constraint firstItem="lPU-Ym-oCv" firstAttribute="centerY" secondItem="f3g-pY-W4f" secondAttribute="centerY" id="wnh-PZ-yRd"/>
                 <constraint firstItem="zT2-mY-xVM" firstAttribute="leading" secondItem="XmA-9b-umD" secondAttribute="leading" id="yrk-17-bdT"/>
             </constraints>
             <point key="canvasLocation" x="-669.46564885496184" y="-271.12676056338029"/>

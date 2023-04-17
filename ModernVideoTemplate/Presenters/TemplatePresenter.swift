@@ -23,5 +23,5 @@ final class TemplatePresenter: ObservableObject, TemplatePresentable {
     var processedImagePublished: Published<UIImage?> { _processedImage }
     var processedImagePublisher: Published<UIImage?>.Publisher { $processedImage }
     
-    var convertVideoResultSubject: CurrentValueSubject<Bool, MediaError> = .init(true)
+    var convertVideoResultSubject: CurrentValueSubject<Bool, MediaError> = .init(false)
 }
